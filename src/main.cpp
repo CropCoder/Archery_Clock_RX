@@ -75,8 +75,8 @@ Adafruit_NeoPixel clock1(NUM_PIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
   memcpy(&RXdata, incomingData, sizeof(RXdata));
-  //actionID = RXdata.a;
-  Serial.print("\nactionID: ");  Serial.print(RXdata.a);
+  actionID = RXdata.a;
+  // Serial.print("\nactionID: ");  Serial.print(RXdata.a);
 }
 
 
@@ -91,42 +91,38 @@ int readActionID(bool reset = true){
 
 
 void checkButtons(){
-// int debounceDuration = 50;
+int debounceDuration = 50;
 
-//   if (!digitalRead(FFWbutton)) {
-//     while (!digitalRead(FFWbutton)) {
-//       delay(debounceDuration);
-//     }
-//     delay(debounceDuration);
+  if (readActionID(false)==1234) {
+    readActionID(); // reset actionID
+    delay(debounceDuration);
 
-//     if (FFWState == false){
-//       FFWState = true;
-//     } else {
-//       FFWState = false;
-//     }
-//     //Serial.print("FFWbutton pressed, FFWState: ");
-//     //Serial.println(FFWState);
-//   }
+    if (FFWState == false){
+      FFWState = true;
+    } else {
+      FFWState = false;
+    }
+    // Serial.print("FFWbutton pressed, FFWState: ");
+    // Serial.println(FFWState);
+  }
 
-//   if (!digitalRead(Holdbutton)) {
-//     while (!digitalRead(Holdbutton)) {
-//       delay(debounceDuration);
-//     }
-//     delay(debounceDuration);
+  if (readActionID(false)==2314) {
+    readActionID(); // reset actionID
+    delay(debounceDuration);
 
-//     if (HoldState == false){
-//       HoldState = true;
-//     } else {
-//       HoldState = false;
-//     }
-//     //Serial.print("Holdbutton pressed, HoldState: ");
-//     //Serial.println(HoldState);
-//   }
-  
-// Serial.print("HoldState: ");Serial.println(HoldState);
-// Serial.print("FFWState: ");Serial.println(FFWState);
+    if (HoldState == false){
+      HoldState = true;
+    } else {
+      HoldState = false;
+    }
+    // Serial.print("Holdbutton pressed, HoldState: ");
+    // Serial.println(HoldState);
+  }
+
+// Serial.print("actionID:\t"); Serial.println(readActionID(false));
+// Serial.print("HoldState:\t");Serial.println(HoldState);
+// Serial.print("FFWState:\t"); Serial.println(FFWState);
 // Serial.println();
-
 }
 
 void countDown(float firstPixel, float lastPixel, int color /*HSV*/ ,float duration, bool warning){
@@ -137,7 +133,7 @@ void countDown(float firstPixel, float lastPixel, int color /*HSV*/ ,float durat
   fadeDelay = fadeDelay * fadeDelayCorrection;
 
   int warningPixel = (numPixels/duration * warningSec);
-  Serial.print("warningPixel: ");Serial.println(warningPixel);
+  // Serial.print("warningPixel: ");Serial.println(warningPixel);
 
   for (int i = firstPixel; i <= lastPixel; i++) {
     clock1.setPixelColor(i, clock1.ColorHSV(color, 255, maxBrightness));
@@ -400,10 +396,10 @@ void setup() {
 void loop() {
   //checkButtons();
   while (actRound <= numRounds) {
-    Serial.print("actRound: ");Serial.println(actRound);  // print the actual round for debugging
+    // Serial.print("actRound: ");Serial.println(actRound);  // print the actual round for debugging
 
     for (subRound = 0; subRound < numGroups; subRound++) {
-      for(int j = 0; j < (sizeof(listOfGroups)/sizeof(listOfGroups[0])); j++) {Serial.print(listOfGroups[j]);}Serial.println(); // print the list of groups for debugging
+      // for(int j = 0; j < (sizeof(listOfGroups)/sizeof(listOfGroups[0])); j++) {Serial.print(listOfGroups[j]);}Serial.println(); // print the list of groups for debugging
 
       displayGroup();
       countDown(0,numLedTimer, colorOfGetToLine, secGetToLine, false); // get to the line
