@@ -346,7 +346,7 @@ void pingPong(){  // MARK: PINGPONG
     clock1.clear();
     clock1.setPixelColor(currentPos, clock1.ColorHSV(colorOfPixel, 255, maxBrightness));
     clock1.show();
-    delay(100);
+    delay(2000/NUM_PIXELS);
 
     currentPos += direction;
     if (currentPos > endPos) {
