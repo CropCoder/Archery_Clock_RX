@@ -90,6 +90,11 @@ void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) 
   memcpy(&RXdata, incomingData, sizeof(RXdata));
   actionID = RXdata.a;
   Serial.print("\nactionID: ");  Serial.print(RXdata.a);
+
+  if (actionID == 9999){
+    ESP.restart();
+  }
+
 }
 
 
@@ -396,8 +401,9 @@ void pingPong(){  // MARK: PINGPONG
 
 void setup() {  //MARK: SETUP
 
-  Serial.begin(115200);
+  tone(buzzer, 0, 0); // turn off the buzzer
 
+  Serial.begin(115200);
 
   //Begin ESP-NOW setup
 
@@ -419,7 +425,7 @@ void setup() {  //MARK: SETUP
     listOfGroups[i] = i+1;
   } 
 
-  delay(500);            // for recovery
+  //delay(500);            // for recovery
   clock1.begin();        // initialize NeoPixel strip object
   clock1.clear();        // clear all registers from previous entries
   clock1.show();         // display the cleared registers
