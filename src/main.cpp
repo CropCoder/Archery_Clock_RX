@@ -23,12 +23,12 @@
 
 // COMPETITION VARIABLES (meant to be changed by the user)
 #define numRounds       10    // 
-#define numArrows      3
-#define timePerArrow   30    // time per arrow in seconds
+#define numArrows       3
+#define timePerArrow    30    // time per arrow in seconds
 #define secGetToLine    10    // time to get to the shootingline before the shooting starts
-#define numGroups        4     // min. 1, max 4 groups
-float maxBrightness   =  40;   // 2(!)-255 (2 = lowest, 255 = full brightness)
-#define startPhase       3     // 0: no start phase (R/B/G); 1: checkColors + hold; 2: hold; 3: pingPong + hold
+#define numGroups       4     // min. 1, max 4 groups
+float maxBrightness   = 20;   // 2(!)-255 (2 = lowest, 255 = full brightness)
+#define startPhase      3     // 0: no start phase (R/B/G); 1: checkColors + hold; 2: hold; 3: pingPong + hold
 
 //TONE VARIABLES (meant to be changed by the user)
 int tone1 [] {440}; // frequency in Hz, duration beween tones is defined by a diffrent variable
@@ -47,7 +47,7 @@ int colorOfTimer              = 21845;  // green //enter color in HSV format (0-
 int colorOfGetToLine          = 43681;  // blue  //enter color in HSV format (0-65535);
 int warningColor              = 5000;
 int warningSec                = 10;     // time in seconds before the end of the shooting phase when the warning color is displayed       
-#define NUM_PIXELS              18
+#define NUM_PIXELS              60
 float numLedGroupIndication =   2;
 float numLedNextGroup      =    1;
 #define numLedGap               1
@@ -369,7 +369,7 @@ void pingPong(){  // MARK: PINGPONG
     }
 
     checkButtons();
-    delayMicroseconds(10800); //10800
+    //delayMicroseconds(10800);
 
     if (currentPos == 1 && direction == 1 && colorIndex == 0) {
         while (readActionID() != 2873) {
