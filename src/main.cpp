@@ -109,38 +109,32 @@ int readActionID(bool reset = true){
 
 
 void checkButtons(){  // MARK: CHECKBUTTONS
-int debounceDuration = 50;
 
-  if (readActionID(false)==1234) {
-    readActionID(); // reset actionID
-    delay(debounceDuration);
+  switch (readActionID(false)) 
+  {
+  case 1110:
+    HoldState = true;
+    readActionID(); // reset the actionID
+    break;
+  
+  case 1111:
+    HoldState = false;
+    readActionID(); // reset the actionID
+    break;
+  
+  case 2220:
+    FFWState = true;
+    readActionID(); // reset the actionID
+    break;
 
-    if (FFWState == false){
-      FFWState = true;
-    } else {
-      FFWState = false;
-    }
-    // Serial.print("FFWbutton pressed, FFWState: ");
-    // Serial.println(FFWState);
+  case 2221:
+    FFWState = false;
+    readActionID(); // reset the actionID
+    break;
+  
+  default:
+    break;
   }
-
-  if (readActionID(false)==2314) {
-    readActionID(); // reset actionID
-    delay(debounceDuration);
-
-    if (HoldState == false){
-      HoldState = true;
-    } else {
-      HoldState = false;
-    }
-    // Serial.print("Holdbutton pressed, HoldState: ");
-    // Serial.println(HoldState);
-  }
-
-// Serial.print("actionID:\t"); Serial.println(readActionID(false));
-// Serial.print("HoldState:\t");Serial.println(HoldState);
-// Serial.print("FFWState:\t"); Serial.println(FFWState);
-// Serial.println();
 }
 
 void buzz(int toneID){   // MARK: BUZZ
