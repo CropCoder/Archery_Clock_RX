@@ -30,6 +30,15 @@
 float maxBrightness   =  40;   // 2(!)-255 (2 = lowest, 255 = full brightness)
 #define startPhase       3     // 0: no start phase (R/B/G); 1: checkColors + hold; 2: hold; 3: pingPong + hold
 
+//TONE VARIABLES (meant to be changed by the user)
+int tone1 [] {1000}; // frequency in Hz, duration beween tones is defined by a diffrent variable
+int tone2 [] {2000, 3000};
+int tone3 [] {440, 440, 440};
+int tone4 [] {7000, 8000, 9000, 10000};
+
+#define toneDuration  700 // duration of each tone in milliseconds
+#define toneGap       200 // duration between each tone in milliseconds
+
 
 //CLOCK VARIABLES (only meant to be changed by the user if a new/diffrent clock is used AND the user knows what they are doing)
 unsigned int colorOfGroups[4] = {0, 21845, 10922, 43681};  // group 1/A: red, group 2/B: green, group 3/C: yellow, group 4/D: blue
@@ -65,9 +74,11 @@ typedef struct struct_message {
 struct_message RXdata;
 
 
+// MARK: PINS
 #define LEDPIN      16             // 
 #define FFWbutton   22             // all GPIO pins can be used
 #define Holdbutton 23              // all GPIO pins can be used
+#define buzzer 14
 
 Adafruit_NeoPixel clock1(NUM_PIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
@@ -90,7 +101,7 @@ int readActionID(bool reset = true){
 
 
 
-void checkButtons(){
+void checkButtons(){  // MARK: CHECKBUTTONS
 int debounceDuration = 50;
 
   if (readActionID(false)==1234) {
@@ -125,7 +136,42 @@ int debounceDuration = 50;
 // Serial.println();
 }
 
-void countDown(float firstPixel, float lastPixel, int color /*HSV*/ ,float duration, bool warning){
+void buzz(int toneID){   // MARK: BUZZ
+  switch (toneID) {
+    case 1:
+      for (int i = 0; i < sizeof(tone1) / sizeof(tone1[0]); i++) {
+        tone(buzzer, tone1[i], toneDuration);
+        tone(buzzer, 0, toneGap);
+      }
+      break;
+
+    case 2:
+      for (int i = 0; i < sizeof(tone2) / sizeof(tone2[0]); i++) {
+        tone(buzzer, tone2[i], toneDuration);
+        tone(buzzer, 0, toneGap);
+      }
+      break;
+
+    case 3:
+      for (int i = 0; i < sizeof(tone3) / sizeof(tone3[0]); i++) {
+        tone(buzzer, tone3[i], toneDuration);
+        tone(buzzer, 0, toneGap);
+      }
+      break;
+
+    case 4:
+      for (int i = 0; i < sizeof(tone4) / sizeof(tone4[0]); i++) {
+        tone(buzzer, tone4[i], toneDuration);
+        tone(buzzer, 0, toneGap);
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
+void countDown(float firstPixel, float lastPixel, int color /*HSV*/ ,float duration, bool warning){ // MARK: COUNTDOWN
 
   float iterations = log(maxBrightness) / log(1.05);
   float numPixels = lastPixel - firstPixel;
@@ -176,7 +222,7 @@ void countDown(float firstPixel, float lastPixel, int color /*HSV*/ ,float durat
   }  
 }
 
-void fade(int color){                                                       // can not be skipped nor hold, this is by design!!!
+void fade(int color){                                                   // can not be skipped nor hold, this is by design!!!
   clock1.clear();                                                           // clear all registers, in theory not necessary
   for (int i = 0; i < 3; i++) {                                             // repeat the fade 3 times
     for (int j = 0; j < NUM_PIXELS; j++) {                                  // fade in
@@ -218,7 +264,7 @@ void fade(int color){                                                       // c
 
 
 
-void displayGroup(){
+void displayGroup(){  // MARK: DISPLAYGROUP
   for (int i = NUM_PIXELS-numLedGroupIndication; i < NUM_PIXELS; i++) {
     clock1.setPixelColor(i, clock1.ColorHSV(colorOfGroups[listOfGroups[0]-1], 255, maxBrightness));
   }
@@ -241,7 +287,7 @@ void displayGroup(){
 }
 
 
-void hold(){
+void hold(){  // MARK: HOLD
 
   displayGroup();
   HoldState = true;
@@ -253,7 +299,7 @@ void hold(){
   HoldState = false;
 }
 
-void updateGroups(){
+void updateGroups(){  // MARK: UPDATEGROUPS
   int temp = listOfGroups[0];
   for (int i = 0; i < numGroups - 1; i++) {
     listOfGroups[i] = listOfGroups[i + 1];
@@ -280,7 +326,7 @@ void checkColors() {
   clock1.show();
 }
 
-void pingPong(){
+void pingPong(){  // MARK: PINGPONG
   int startPos = 0;
   int endPos = NUM_PIXELS - 1;
   int currentPos = startPos;
@@ -325,7 +371,7 @@ void pingPong(){
 
 //--------------------------------------------------------------------------------
 
-void setup() {
+void setup() {  //MARK: SETUP
 
   Serial.begin(115200);
 
@@ -393,8 +439,11 @@ void setup() {
   }
 }
 
-void loop() {
+void loop() { //MARK: LOOP
   //checkButtons();
+
+  buzz(3);
+
   while (actRound <= numRounds) {
     // Serial.print("actRound: ");Serial.println(actRound);  // print the actual round for debugging
 
