@@ -23,9 +23,9 @@
 
 // COMPETITION VARIABLES (meant to be changed by the user)
 #define numRounds       10    // 
-//#define numArrows      3
+#define numArrows      3
+#define timePerArrow   30    // time per arrow in seconds
 #define secGetToLine    10    // time to get to the shootingline before the shooting starts
-#define secShooting     90    // time for shooting
 #define numGroups        4     // min. 1, max 4 groups
 float maxBrightness   =  40;   // 2(!)-255 (2 = lowest, 255 = full brightness)
 #define startPhase       3     // 0: no start phase (R/B/G); 1: checkColors + hold; 2: hold; 3: pingPong + hold
@@ -56,6 +56,7 @@ int listOfGroups[numGroups];
 
 
 //SYSTEM VARIABLES (NO TOUCHY TOUCHY!...NEVER! otherwise you will break the code and the world will end...or something like that)
+int secShooting = numArrows * timePerArrow;    // time for shooting
 bool HoldState = false;
 bool FFWState =  false;
 int currentGroup = 1;
