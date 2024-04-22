@@ -89,7 +89,7 @@ Adafruit_NeoPixel clock1(NUM_PIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
   memcpy(&RXdata, incomingData, sizeof(RXdata));
   actionID = RXdata.a;
-  // Serial.print("\nactionID: ");  Serial.print(RXdata.a);
+  Serial.print("\nactionID: ");  Serial.print(RXdata.a);
 }
 
 
@@ -370,6 +370,20 @@ void pingPong(){  // MARK: PINGPONG
     }
 
     checkButtons();
+    delayMicroseconds(10800); //10800
+
+    if (currentPos == 1 && direction == 1 && colorIndex == 0) {
+        while (readActionID() != 2873) {
+          delayMicroseconds(0);
+        }
+    }
+
+    if (readActionID(false) == 2873) {
+        currentPos = startPos;
+        direction = 1; // 1 for moving right, -1 for moving left
+        colorIndex = 0; // index to keep track of the current color
+    }
+
   }
   clock1.clear();
   clock1.show();
