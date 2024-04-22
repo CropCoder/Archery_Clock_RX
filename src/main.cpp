@@ -429,9 +429,28 @@ void setup() {  //MARK: SETUP
 
   if (numGroups < 1) {
     nextGroup = 2;
-  }
+    }
 
-  switch (startPhase) {
+    unsigned long startTime = millis();
+    int delayTime = 700;
+    bool onOff = true;
+    while (readActionID() != 7354){  // wait for master to run its setup
+        if (millis() - startTime >= delayTime && !onOff) {
+          clock1.clear();
+          clock1.show();
+          startTime = millis();
+          onOff = true;
+        }
+
+        if (millis() - startTime >= delayTime && onOff) {
+          clock1.setPixelColor(0, clock1.ColorHSV(0, 255, maxBrightness));
+          clock1.show();
+          startTime = millis();
+          onOff = false;
+        }
+      }
+    
+    switch (startPhase) {
     case 0:
       // No start phase, just start the competition right away
       break;
