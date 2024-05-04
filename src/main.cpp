@@ -27,7 +27,7 @@
 #define timePerArrow    30    // time per arrow in seconds
 #define secGetToLine    10    // time to get to the shootingline before the shooting starts
 #define numGroups       4     // min. 1, max 4 groups
-float maxBrightness   = 20;   // 2(!)-255 (2 = lowest, 255 = full brightness)
+float maxBrightness   = 255;   // 2(!)-255 (2 = lowest, 255 = full brightness)
 #define startPhase      3     // 0: no start phase (R/B/G); 1: checkColors + hold; 2: hold; 3: pingPong + hold
 
 //TONE VARIABLES (meant to be changed by the user)
@@ -47,7 +47,7 @@ int colorOfTimer              = 21845;  // green //enter color in HSV format (0-
 int colorOfGetToLine          = 43681;  // blue  //enter color in HSV format (0-65535);
 int warningColor              = 5000;
 int warningSec                = 15;     // time in seconds before the end of the shooting phase when the warning color is displayed       
-#define NUM_PIXELS              72
+#define NUM_PIXELS              75
 float numLedGroupIndication =   2;
 float numLedNextGroup      =    1;
 #define numLedGap               1
@@ -225,9 +225,9 @@ void countDown(float firstPixel, float lastPixel, int color /*HSV*/ ,float durat
     clock1.show();
     delayMicroseconds(50000); // catch edge cases. Does not influence the duration, only the refresh rate
   
-    Serial.print(currentLastPixel);
-    Serial.print("\t");
-    Serial.println(brightness);
+    //Serial.print(currentLastPixel);
+    //Serial.print("\t");
+    //Serial.println(brightness);
   
     timeElapsed = millis() - startTime; // calculate the elapsed time
 
